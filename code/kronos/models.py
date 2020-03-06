@@ -39,7 +39,7 @@ class Stage(db.Model):
         self.name = name
 
     def __repr__(self):
-        return (f"Stage('{self.name}'")
+        return (f"Stage('{self.name}')")
 
 
 class Performance(db.Model):
@@ -66,7 +66,7 @@ class Performance(db.Model):
         self.when = when
 
     def __repr__(self):
-        return (f"Performance('Name: {self.name}'), {self.when}")
+        return (f"Performance('Name: {self.name}'), {self.when})")
 
 
 class Member(db.Model):
@@ -88,7 +88,7 @@ class Member(db.Model):
         self.last_name = last_name
 
     def __repr__(self):
-        return (f"Member('{self.first_name, self.last_name}")
+        return (f"Member('{self.first_name, self.last_name}')")
 
 
 @login_manager.user_loader
