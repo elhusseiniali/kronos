@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 api = Api(app, version='1.0', title='Kronos',
           description='A simple scheduling tool.')
-conf = api.namespace('doc')
+conf = api.namespace('schedule', description='All operations.')
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
