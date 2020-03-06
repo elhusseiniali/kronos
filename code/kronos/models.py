@@ -12,13 +12,18 @@ class Performer(db.Model):
     phone_number = db.Column(db.Integer, nullable=True, default=0)
 
     member_id = db.Column(db.Integer, db.ForeignKey("member.id"))
+    member = db.relationship('Member',
+                             back_populates='performers')
 
-    def __init__(self, name, number):
+    performances = db.relationship("Performance",
+                                   back_populates='performer')
+
+    def __init__(self, name, phone_number):
         self.name = name
-        self.number = number
+        self.phone_number = phone_number
 
     def __repr__(self):
-        return (f"Performer('Name: {self.name}', 'Number: {self.number}')")
+        return (f"Performer('Name: {self.name}', 'Number: {self.phone_number}')")
 
 
 class Stage(db.Model):
@@ -27,7 +32,8 @@ class Stage(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(25), unique=True, nullable=False)
 
-    performances = db.relationship("Performance")
+    performances = db.relationship('Performance',
+                                   back_populates='stage')
 
     def __init__(self, name):
         self.name = name
@@ -42,12 +48,18 @@ class Performance(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     duration = db.Column(db.Integer, nullable=False)
+    when = db.Column(db.DateTime, nullable=False)
 
     performer_id = db.Column(db.Integer,
                              db.ForeignKey("performer.id"),
                              nullable=False)
+    performer = db.relationship("Performer",
+                                back_populates='performances')
+
     stage_id = db.Column(db.Integer,
                          db.ForeignKey("stage.id"))
+    stage = db.relationship('Stage',
+                            back_populates='performances')
 
     def __init__(self, name, when):
         self.name = name
@@ -68,7 +80,8 @@ class Member(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
 
-    performers = db.relationship("Performer")
+    performers = db.relationship('Performer',
+                                 back_populates='member')
 
     def __init__(self, first_name, last_name):
         self.first_name = first_name
