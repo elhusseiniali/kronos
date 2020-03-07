@@ -66,12 +66,12 @@ class Performance(db.Model):
     checkout = db.relationship('CheckOut',
                                back_populates='performance')
 
-    def __init__(self, name, when):
-        self.name = name
+    def __init__(self, performer_id, when):
+        self.performer_id = performer_id
         self.when = when
 
     def __repr__(self):
-        return (f"Performance('Name: {self.name}'), {self.when})")
+        return (f"Performance('Performer: {self.performer_id}'), {self.when})")
 
 
 class Member(db.Model):
