@@ -73,7 +73,7 @@ class Performance(db.Model):
         self.when = when
 
     def __repr__(self):
-        return (f"Performance('Performer: {self.performer_id}'), {self.when})")
+        return (f"Performance('Performer: {self.performer_id}'))")
 
 
 class Member(db.Model):
@@ -100,7 +100,7 @@ class Member(db.Model):
         self.last_name = last_name
 
     def __repr__(self):
-        return (f"Member('{self.first_name, self.last_name}')")
+        return (f"Member('{self.last_name}')")
 
 
 class CheckIn(db.Model):
@@ -109,17 +109,16 @@ class CheckIn(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     when = db.Column(db.DateTime, nullable=False)
 
-    performance_id = db.Column(db.ForeignKey('performance.id'))
+    performance_id = db.Column(db.ForeignKey('performance.id'), nullable=False)
     performance = db.relationship('Performance',
                                   back_populates='checkin')
 
     member_id = db.Column(db.Integer,
-                          db.ForeignKey('member.id'))
+                          db.ForeignKey('member.id'),
+                          nullable=False)
     member = db.relationship('Member',
                              back_populates='checkins')
 
-    storage_id = db.Column(db.Integer,
-                           db.ForeignKey('storage.id'))
     storage = db.relationship('Storage',
                               back_populates='checkin')
 
@@ -128,8 +127,7 @@ class CheckIn(db.Model):
         self.performance_id = performance_id
 
     def __repr__(self):
-        return (f"Member('{self.member_id}')",
-                f"Performance('{self.performance_id}') ")
+        return (f"Performance('{self.performance_id}')")
 
 
 class CheckOut(db.Model):
@@ -174,7 +172,7 @@ class Box(db.Model):
         self.stage_id = stage_id
 
     def __repr__(self):
-        return(f"Box('{self.id}'), on stage {self.stage_id}")
+        return(f"Box('{self.id}') on stage {self.stage_id}")
 
 
 class Storage(db.Model):
@@ -186,10 +184,13 @@ class Storage(db.Model):
     box = db.relationship('Box',
                           back_populates='storages')
 
+    checkin_id = db.Column(db.Integer,
+                           db.ForeignKey('checkin.id'),
+                           nullable=False)
     checkin = db.relationship('CheckIn',
                               back_populates='storage')
 
-    time_in = db.Column(db.DateTime, nullable=True)
+    time_in = db.Column(db.DateTime, nullable=False)
     time_out = db.Column(db.DateTime, nullable=True)
 
     def __init__(self, box_id):
