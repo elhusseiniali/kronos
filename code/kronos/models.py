@@ -34,6 +34,8 @@ class Stage(db.Model):
 
     performances = db.relationship('Performance',
                                    back_populates='stage')
+    boxes = db.relationship('Box',
+                            back_populates='stage')
 
     def __init__(self, name):
         self.name = name
@@ -116,6 +118,11 @@ class CheckIn(db.Model):
     member = db.relationship('Member',
                              back_populates='checkins')
 
+    storage_id = db.Column(db.Integer,
+                           db.ForeignKey('storage.id'))
+    storage = db.relationship('Storage',
+                              back_populates='checkin')
+
     def __init__(self, member_id, performance_id):
         self.member_id = member_id
         self.performance_id = performance_id
@@ -146,7 +153,50 @@ class CheckOut(db.Model):
 
     def __repr__(self):
         return (f"Member('{self.member_id}')",
-                f"Performance('{self.performance_id}') ")
+                f"Performance('{self.performance_id}')")
+
+
+class Box(db.Model):
+    __tablename__ = "box"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    stage_id = db.Column(db.Integer,
+                         db.ForeignKey('stage.id'))
+    stage = db.relationship('Stage',
+                            back_populates='boxes')
+
+    storages = db.relationship('Storage',
+                               back_populates='box')
+
+    def __init__(self, id, stage_id):
+        self.id = id
+        self.stage_id = stage_id
+
+    def __repr__(self):
+        return(f"Box('{self.id}'), on stage {self.stage_id}")
+
+
+class Storage(db.Model):
+    __tablename__ = "storage"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    box_id = db.Column(db.Integer,
+                       db.ForeignKey('box.id'))
+    box = db.relationship('Box',
+                          back_populates='storages')
+
+    checkin = db.relationship('CheckIn',
+                              back_populates='storage')
+
+    time_in = db.Column(db.DateTime, nullable=True)
+    time_out = db.Column(db.DateTime, nullable=True)
+
+    def __init__(self, box_id):
+        self.box_id = box_id
+
+    def __repr__(self):
+        return (f"Storage('{self.box_id}')")
 
 
 @login_manager.user_loader
