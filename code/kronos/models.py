@@ -61,6 +61,11 @@ class Performance(db.Model):
     stage = db.relationship('Stage',
                             back_populates='performances')
 
+    checkin = db.relationship('CheckIn',
+                              back_populates='performance')
+    checkout = db.relationship('CheckOut',
+                               back_populates='performance')
+
     def __init__(self, name, when):
         self.name = name
         self.when = when
@@ -83,12 +88,65 @@ class Member(db.Model):
     performers = db.relationship('Performer',
                                  back_populates='member')
 
+    checkins = db.relationship('CheckIn',
+                               back_populates='member')
+    checkouts = db.relationship('CheckOut',
+                                back_populates='member')
+
     def __init__(self, first_name, last_name):
         self.first_name = first_name
         self.last_name = last_name
 
     def __repr__(self):
         return (f"Member('{self.first_name, self.last_name}')")
+
+
+class CheckIn(db.Model):
+    __tablename__ = "checkin"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    when = db.Column(db.DateTime, nullable=False)
+
+    performance_id = db.Column(db.ForeignKey('performance.id'))
+    performance = db.relationship('Performance',
+                                  back_populates='checkin')
+
+    member_id = db.Column(db.Integer,
+                          db.ForeignKey('member.id'))
+    member = db.relationship('Member',
+                             back_populates='checkins')
+
+    def __init__(self, member_id, performance_id):
+        self.member_id = member_id
+        self.performance_id = performance_id
+
+    def __repr__(self):
+        return (f"Member('{self.member_id}')",
+                f"Performance('{self.performance_id}') ")
+
+
+class CheckOut(db.Model):
+    __tablename__ = "checkout"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    when = db.Column(db.DateTime, nullable=False)
+
+    performance_id = db.Column(db.ForeignKey('performance.id'))
+    performance = db.relationship('Performance',
+                                  back_populates='checkout')
+
+    member_id = db.Column(db.Integer,
+                          db.ForeignKey('member.id'))
+    member = db.relationship('Member',
+                             back_populates='checkouts')
+
+    def __init__(self, member_id, performance_id):
+        self.member_id = member_id
+        self.performance_id = performance_id
+
+    def __repr__(self):
+        return (f"Member('{self.member_id}')",
+                f"Performance('{self.performance_id}') ")
 
 
 @login_manager.user_loader

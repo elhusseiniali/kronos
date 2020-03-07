@@ -29,7 +29,10 @@ login_manager.login_message_category = 'info'
 #   and imports in a package. The order of the imports is also important.
 #   These two imports *had* to happen after initializing db.
 from kronos import routes
-from kronos.models import User, Performer, Performance, Member, Stage
+from kronos.models import User
+from kronos.models import Member
+from kronos.models import Performer, Performance, Stage
+from kronos.models import CheckIn, CheckOut
 
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -45,3 +48,5 @@ admin.add_view(ModelView(Performer, db.session))
 admin.add_view(ModelView(Performance, db.session))
 admin.add_view(ModelView(Member, db.session))
 admin.add_view(ModelView(Stage, db.session))
+admin.add_view(ModelView(CheckIn, db.session))
+admin.add_view(ModelView(CheckOut, db.session))
