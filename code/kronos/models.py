@@ -1,6 +1,6 @@
 from kronos import db, login_manager
 from flask_login import UserMixin
-from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy_utils import EmailType
 
 
 class Performer(db.Model):
@@ -9,7 +9,8 @@ class Performer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     name = db.Column(db.String(25), unique=True, nullable=False)
-    phone_number = db.Column(db.Integer, nullable=True, default=0)
+
+    phone_number = db.Column(db.Integer, nullable=True)
 
     member_id = db.Column(db.Integer, db.ForeignKey("member.id"))
     member = db.relationship('Member',
@@ -84,7 +85,7 @@ class Member(db.Model):
     first_name = db.Column(db.String(25), unique=True, nullable=False)
     last_name = db.Column(db.String(25), unique=True, nullable=False)
 
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(EmailType)
     password = db.Column(db.String(60), nullable=False)
 
     performers = db.relationship('Performer',
