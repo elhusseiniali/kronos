@@ -24,7 +24,7 @@ class Performer(db.Model):
         self.phone_number = phone_number
 
     def __repr__(self):
-        return (f"Performer('Name: {self.name}', 'Number: {self.phone_number}')")
+        return (f"Performer('Name: {self.name}')")
 
 
 class Stage(db.Model):
